@@ -1,8 +1,12 @@
 import express from 'express';
+import nodehun from 'nodehun';
+
+
+
 
 const app = express();
 
-app.get('/',(req,resp)=>{
+app.get('/check/:word',(req,resp,next)=>{
     console.log('teste');
     resp.write("Hellp");
     resp.end();
