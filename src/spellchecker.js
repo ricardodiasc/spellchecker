@@ -9,14 +9,20 @@ class SpellChecker {
 
     }
 
-    check(word, callback){
-        this.dict.spellSuggest(word,callback);
-    }
-
     checkWord(word){
-        let resolve = this.check.bind(this);
-        let c =  new Promise(resolve);
-        return c;
+        return  new Promise((resolve,reject)=>{
+            this.dict.spellSuggest(word,(err,correct, sugestion, originalWord)=>{
+                if(err){
+                    return reject(err);
+                }
+                return resolve({
+                    correct: correct,
+                    sugestion: sugestion,
+                    originalWord: originalWord
+                })
+            });
+
+        });
     }
 }
 
