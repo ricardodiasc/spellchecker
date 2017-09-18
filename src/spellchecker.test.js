@@ -10,4 +10,11 @@ describe('Verifica funcionamento do spellchecker', ()=>{
         } 
         let response = spellChecker.check('teste', callback);
     });
+
+    it('Should use promisse instead of callback', ()=>{
+        let spellChecker = new SpellChecker();   
+        spellChecker.checkWord('teste').then((err, correct, sugestion, originalWord)=>{
+            expect(correct).toBeTruthy();
+        });
+    });
 });

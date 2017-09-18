@@ -12,6 +12,12 @@ class SpellChecker {
     check(word, callback){
         this.dict.spellSuggest(word,callback);
     }
+
+    checkWord(word){
+        let resolve = this.check.bind(this);
+        let c =  new Promise(resolve);
+        return c;
+    }
 }
 
 export default SpellChecker;
