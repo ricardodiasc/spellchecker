@@ -1,49 +1,43 @@
 import nodehun from 'nodehun';
 import fs from 'fs';
-import iconv from 'iconv-lite';
+import Promise from 'promise';
 
 const encoding = require('encoding');
 
 class SpellChecker {
     constructor(){
-        let affBuff = fs.readFileSync(__dirname+'/dic/hunspell/utf/pt_BR.aff');
-        let dicBuff = fs.readFileSync(__dirname+'/dic/hunspell/utf/pt_BR.dic');
+        let affBuff = fs.readFileSync(new Buffer(__dirname+'/dic/hunspell/pt_BR.aff',{encoding:'ISO8859-1'}));
+        let dicBuff = fs.readFileSync(new Buffer(__dirname+'/dic/hunspell/pt_BR.dic',{encoding:'ISO8859-1'}));
         this.dict = new nodehun(affBuff,dicBuff);
-
     }
 
     check(word){
-        return  new Promise((resolve,reject)=>{
+        console.log('Verificando palavra '+word);
+
+        return  new Promise( (resolve,reject)=>{
+            console.log('inicia verificacao');
+            
             this.dict.spellSuggest(word,(err,correct, sugestion, originalWord)=>{
                 if(err){
-                    return reject(err);
+                    console.log(err);
+                    reject(err);
                 }
-                try{
-                    let s = sugestion;
-                    console.log(encoding.convert(s,'win1252','utf8').toString());
-
-                    
-
-                    console.log(s);
-    
-                }catch(e){
-                    console.log(e);
-                    return reject(err);
-                }
-                
-                
                 let result = {
                     correct: correct,
-                    sugestion: sugestion.map((element) =>  iconv.decode(new Buffer(element),'win1251')),
+                    sugestions: sugestions,
                     originalWord: originalWord
                 }
-               
-                return resolve(result);
+                
+                resolve(result);
             });
 
         });
     }
+
+    checkWord(word, callback){
+        this.dict.spellSuggestions(word,callback);
+    }
+
 }
 
 export default SpellChecker;
-
